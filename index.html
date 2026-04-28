@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Захист виробничої практики · Гоян О. В. · ІСТ-41</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg-0: #07070d;
+    --bg-1: #0d0d18;
+    --bg-2: #14142b;
+    --surface: rgba(255, 255, 255, 0.04);
+    --surface-strong: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text: #ECECF1;
+    --muted: #9CA3AF;
+    --dim: #6B7280;
+    --accent-a: #7C3AED;
+    --accent-b: #06B6D4;
+    --accent-c: #F472B6;
+    --good: #10B981;
+    --warn: #F59E0B;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 30px 80px -30px rgba(124, 58, 237, 0.45), 0 10px 30px -15px rgba(6, 182, 212, 0.25);
+    --container: 1200px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    color: var(--text);
+    background: var(--bg-0);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(1000px 700px at 10% -10%, rgba(124, 58, 237, 0.18), transparent 60%),
+      radial-gradient(900px 600px at 100% 10%, rgba(6, 182, 212, 0.14), transparent 60%),
+      radial-gradient(700px 500px at 50% 100%, rgba(244, 114, 182, 0.10), transparent 60%),
+      var(--bg-0);
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    pointer-events: none;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+  code, pre { font-family: 'JetBrains Mono', monospace; }
+
+  /* Container */
+  .container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    background: rgba(7, 7, 13, 0.65);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px; gap: 24px;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 15px; letter-spacing: 0.2px;
+  }
+  .brand-logo {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: conic-gradient(from 200deg, var(--accent-a), var(--accent-b), var(--accent-c), var(--accent-a));
+    box-shadow: 0 0 0 1px var(--border-strong), 0 8px 24px -8px var(--accent-a);
+  }
+  .nav-links {
+    display: flex; gap: 4px; flex-wrap: wrap;
+    overflow-x: auto;
+  }
+  .nav-links a {
+    padding: 8px 12px; border-radius: 8px;
+    font-size: 13.5px; color: var(--muted);
+    transition: all 160ms ease;
+    white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--surface); }
+  .nav-links a.active {
+    color: var(--text);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(6, 182, 212, 0.12));
+    box-shadow: inset 0 0 0 1px var(--border-strong);
+  }
+  @media (max-width: 860px) {
+    .nav-links { display: none; }
+  }
+
+  /* Sections */
+  section { padding: 96px 0; position: relative; }
+  section + section { border-top: 1px solid var(--border); }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--muted); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.6px; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-b);
+    box-shadow: 0 0 12px var(--accent-b);
+  }
+  h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin: 0; }
+  h1 { font-size: clamp(36px, 6vw, 68px); }
+  h2 { font-size: clamp(28px, 3.6vw, 42px); margin-bottom: 14px; }
+  h3 { font-size: 18px; }
+  .subtitle { color: var(--muted); font-size: clamp(15px, 1.4vw, 18px); max-width: 720px; }
+  .gradient-text {
+    background: linear-gradient(135deg, #C4B5FD 0%, #67E8F9 50%, #F9A8D4 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Hero */
+  .hero { padding: 120px 0 72px; }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center;
+  }
+  @media (max-width: 920px) { .hero-grid { grid-template-columns: 1fr; } }
+  .hero h1 span { display: block; }
+  .hero-meta { margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 13px; color: var(--text);
+  }
+  .chip strong { color: var(--muted); font-weight: 500; margin-right: 4px; }
+  .grade-card {
+    position: relative;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, rgba(124, 58, 237, 0.18), rgba(6, 182, 212, 0.10));
+    border: 1px solid var(--border-strong);
+    padding: 32px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .grade-card::before {
+    content: ''; position: absolute; inset: -2px;
+    background: conic-gradient(from 90deg, transparent, rgba(124,58,237,0.6), transparent 30%);
+    z-index: -1; filter: blur(20px); opacity: 0.7;
+  }
+  .grade-label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.8px; }
+  .grade-value {
+    font-size: 96px; font-weight: 800; line-height: 1;
+    background: linear-gradient(135deg, #fff, #C4B5FD 60%, #67E8F9);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    margin: 12px 0 6px;
+  }
+  .grade-tag { color: var(--good); font-weight: 600; }
+  .grade-foot { margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--border-strong); color: var(--muted); font-size: 13px; }
+
+  /* Section title block */
+  .section-head { margin-bottom: 48px; max-width: 760px; }
+
+  /* Cards grid */
+  .grid { display: grid; gap: 18px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 600px) and (max-width: 900px) {
+    .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  .card {
+    position: relative;
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: all 220ms ease;
+  }
+  .card:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-strong);
+    transform: translateY(-2px);
+  }
+  .card-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(6, 182, 212, 0.15));
+    border: 1px solid var(--border-strong);
+    margin-bottom: 14px; font-size: 18px;
+  }
+  .card h3 { margin-bottom: 6px; }
+  .card p { color: var(--muted); margin: 0; font-size: 14px; }
+  .card .label { color: var(--dim); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .card .value { font-size: 16px; font-weight: 600; color: var(--text); }
+
+  /* Tech grid */
+  .tech-grid {
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  }
+  .tech {
+    padding: 18px;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+    transition: all 200ms ease;
+  }
+  .tech:hover { border-color: var(--accent-b); background: var(--surface-strong); }
+  .tech-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--c, var(--accent-a));
+    box-shadow: 0 0 12px var(--c, var(--accent-a));
+  }
+  .tech-name { font-weight: 600; font-size: 14px; }
+  .tech-cat { display: block; color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; margin-top: 2px; }
+
+  /* Architecture diagram */
+  .arch-wrap {
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .arch-svg { width: 100%; min-width: 720px; height: auto; }
+  .arch-legend { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 16px; color: var(--muted); font-size: 13px; }
+  .arch-legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .arch-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  /* Flow */
+  .flow {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;
+  }
+  @media (max-width: 1000px) { .flow { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .flow { grid-template-columns: repeat(2, 1fr); } }
+  .flow-step {
+    position: relative;
+    padding: 18px 16px;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .flow-step .num {
+    display: inline-grid; place-items: center;
+    width: 28px; height: 28px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+    color: white; font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .flow-step h3 { font-size: 14px; }
+  .flow-step p { font-size: 12.5px; color: var(--muted); margin: 4px 0 0; }
+
+  /* Modules table */
+  .modules { display: grid; gap: 14px; }
+  .module {
+    display: grid; grid-template-columns: 220px 1fr; gap: 24px;
+    padding: 20px 24px; border-radius: var(--radius-md);
+    background: var(--surface); border: 1px solid var(--border);
+    transition: all 200ms ease;
+  }
+  .module:hover { background: var(--surface-strong); border-color: var(--border-strong); }
+  @media (max-width: 720px) { .module { grid-template-columns: 1fr; gap: 12px; } }
+  .module-title { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+  .module-title .badge {
+    padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 700;
+    background: rgba(16, 185, 129, 0.14); color: var(--good);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+  .module-title .badge.ai { background: rgba(124, 58, 237, 0.16); color: #C4B5FD; border-color: rgba(124, 58, 237, 0.32); }
+  .module-title .badge.bg { background: rgba(245, 158, 11, 0.14); color: var(--warn); border-color: rgba(245, 158, 11, 0.3); }
+  .module-desc { color: var(--muted); font-size: 14px; }
+  .module-desc strong { color: var(--text); font-weight: 600; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px;
+    width: 2px; background: linear-gradient(to bottom, var(--accent-a), var(--accent-b), var(--accent-c));
+    border-radius: 2px;
+  }
+  .tl-item { position: relative; padding: 8px 0 22px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -27px; top: 14px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent-b);
+    box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.2), 0 0 14px var(--accent-b);
+  }
+  .tl-date { color: var(--muted); font-size: 12.5px; font-weight: 600; letter-spacing: 0.4px; }
+  .tl-title { font-weight: 600; margin: 4px 0 4px; }
+  .tl-text { color: var(--muted); font-size: 14px; }
+
+  /* Test methods */
+  .test-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 720px) { .test-grid { grid-template-columns: 1fr; } }
+  .test-card { padding: 22px; border-radius: var(--radius-md); background: var(--surface); border: 1px solid var(--border); }
+  .test-card .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700;
+    background: linear-gradient(135deg, #C4B5FD, #67E8F9);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .test-card .label { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .test-card .desc { color: var(--dim); font-size: 13px; margin-top: 8px; }
+
+  /* Data table */
+  .data-table {
+    width: 100%; border-collapse: collapse;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); overflow: hidden;
+  }
+  .data-table th, .data-table td {
+    padding: 14px 18px; text-align: left; font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table th {
+    color: var(--muted); font-weight: 600; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    background: var(--surface-strong);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--surface-strong); }
+
+  /* Animated counter */
+  .count {
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(135deg, #fff, #C4B5FD 60%, #67E8F9);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+
+  /* Screenshots */
+  .shots { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 720px) { .shots { grid-template-columns: 1fr; } }
+  .shots .wide { grid-column: span 2; }
+  @media (max-width: 720px) { .shots .wide { grid-column: span 1; } }
+  figure {
+    margin: 0; border-radius: var(--radius-md); overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border);
+    transition: all 220ms ease;
+  }
+  figure:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+  .shot-placeholder {
+    aspect-ratio: 16 / 9;
+    background:
+      linear-gradient(135deg, rgba(124, 58, 237, 0.10), rgba(6, 182, 212, 0.08)),
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 10px, transparent 10px, transparent 20px);
+    display: grid; place-items: center;
+    color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  figcaption { padding: 14px 18px; font-size: 14px; color: var(--text); }
+  figcaption span { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+
+  /* Author / Science */
+  .panel {
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, rgba(124, 58, 237, 0.10), rgba(6, 182, 212, 0.06));
+    border: 1px solid var(--border-strong);
+  }
+  .panel p + p { margin-top: 14px; }
+  .panel .placeholder {
+    color: var(--dim); font-style: italic;
+    padding: 14px 18px; border-radius: 10px;
+    background: rgba(245, 158, 11, 0.08); border: 1px dashed rgba(245, 158, 11, 0.4);
+  }
+
+  /* Footer */
+  footer {
+    padding: 64px 0 40px; border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 13.5px;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+  }
+  @media (max-width: 720px) { .footer-grid { grid-template-columns: 1fr; } }
+  .signatures {
+    display: grid; gap: 20px; grid-template-columns: 1fr 1fr;
+    margin-top: 28px;
+  }
+  @media (max-width: 540px) { .signatures { grid-template-columns: 1fr; } }
+  .sig {
+    padding: 18px; border-radius: var(--radius-md);
+    background: var(--surface); border: 1px solid var(--border);
+  }
+  .sig-line {
+    height: 1px; background: var(--border-strong);
+    margin: 18px 0 8px;
+  }
+  .sig-name { color: var(--text); font-weight: 600; font-size: 14px; }
+  .sig-role { color: var(--muted); font-size: 12.5px; }
+
+  /* Reveal animation */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 700ms ease, transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media print {
+    body::before, body::after { display: none; }
+    .nav { display: none; }
+    section { padding: 24px 0; break-inside: avoid; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== NAV ========== -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="#top" class="brand">
+      <span class="brand-logo"></span>
+      <span>ColdOutreach · Захист практики</span>
+    </a>
+    <div class="nav-links">
+      <a href="#about">Практика</a>
+      <a href="#product">Продукт</a>
+      <a href="#stack">Стек</a>
+      <a href="#architecture">Архітектура</a>
+      <a href="#flow">Алгоритм</a>
+      <a href="#modules">Функціонал</a>
+      <a href="#timeline">Графік</a>
+      <a href="#testing">Апробація</a>
+      <a href="#stats">Статистика</a>
+      <a href="#screenshots">Скріншоти</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section id="top" class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="reveal">
+        <div class="eyebrow"><span class="dot"></span>Виробнича практика · 2026</div>
+        <h1>
+          <span>Звіт про</span>
+          <span class="gradient-text">проходження виробничої</span>
+          <span>практики</span>
+        </h1>
+        <p class="subtitle" style="margin-top:24px">
+          Розробка нового функціоналу B2B SaaS-платформи <strong style="color:var(--text)">ColdOutreach</strong>
+          для автоматизації outreach-процесів: пошук компаній, мультиканальні Sequences,
+          AI-персоналізація та інтеграції з LinkedIn / Email / Calendar.
+        </p>
+        <div class="hero-meta">
+          <span class="chip"><strong>Здобувач:</strong> Гоян Олександр Васильович</span>
+          <span class="chip"><strong>Група:</strong> ІСТ-41</span>
+          <span class="chip"><strong>Спеціальність:</strong> 126 Інформаційні системи та технології</span>
+          <span class="chip"><strong>Ступінь:</strong> Бакалавр</span>
+        </div>
+      </div>
+      <div class="grade-card reveal">
+        <div class="grade-label">Підсумкова оцінка</div>
+        <div class="grade-value">92</div>
+        <div class="grade-tag">Відмінно</div>
+        <div class="grade-foot">
+          Карпатський національний університет імені Василя Стефаника<br/>
+          Факультет математики та інформатики<br/>
+          Кафедра комп'ютерних наук та інформаційних систем
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ABOUT PRACTICE ========== -->
+<section id="about">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span>Розділ 1</div>
+      <h2>Про <span class="gradient-text">практику</span></h2>
+      <p class="subtitle">Базова інформація про місце, термін та керівників проходження виробничої практики.</p>
+    </div>
+    <div class="grid grid-3 reveal">
+      <div class="card">
+        <div class="card-icon">📅</div>
+        <div class="label">Термін проходження</div>
+        <div class="value">16.03.2026 – 24.04.2026</div>
+        <p style="margin-top:8px">6 тижнів повного робочого дня</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏢</div>
+        <div class="label">Виробнича база</div>
+        <div class="value">ТОВ «БІЗНЕС-КОНСТРУКТОР УКРАЇНА»</div>
+        <p style="margin-top:8px">Команда розробки B2B SaaS-платформи</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">💻</div>
+        <div class="label">Робоче місце</div>
+        <div class="value">Розробник програмного забезпечення</div>
+        <p style="margin-top:8px">Full-stack: backend + frontend + інтеграції</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">👤</div>
+        <div class="label">Керівник від бази</div>
+        <div class="value">Христофорова А. Р.</div>
+        <p style="margin-top:8px">Директор ТОВ «БІЗНЕС-КОНСТРУКТОР УКРАЇНА»</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎓</div>
+        <div class="label">Керівник від кафедри</div>
+        <div class="value">Семаньків М. В.</div>
+        <p style="margin-top:8px">Доцент кафедри комп'ютерних наук та ІС</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">👥</div>
+        <div class="label">Склад групи</div>
+        <div class="value">ІСТ-41</div>
+        <p style="margin-top:8px">4 курс · спеціальність 126 ІСТ · бакалавр</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PRODUCT ========== -->
+<section id="product">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span>Розділ 2 · Індивідуальне завдання</div>
+      <h2>Продукт: <span class="gradient-text">ColdOutreach</span></h2>
+      <p class="subtitle">
+        B2B SaaS-платформа для автоматизації холодного outreach. Користувач знаходить
+        релевантні компанії та контакти, запускає мультиканальні Sequences (Email + LinkedIn + Calls)
+        та відстежує конверсію в єдиному інтерфейсі.
+      </p>
+    </div>
+    <div class="grid grid-3 reveal">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>Мета</h3>
+        <p>Скоротити час від ідеї холодної кампанії до першого ліда з тижнів до годин завдяки автоматизації пошуку, персоналізації та доставки повідомлень.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">👨‍💼</div>
+        <h3>Цільова аудиторія</h3>
+        <p>Sales- та BDR-команди в B2B-сегменті, агенції з лідогенерації, продуктові стартапи, що шукають outbound-канал росту.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🚀</div>
+        <h3>Застосування</h3>
+        <p>Пошук компаній за 6+ фільтрами (Industry, Market Segment, Job Postings, Location), Drill-down до контактів, Sequences з A/B-кроками, AI-персоналізація на GPT-4o.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== STACK ========== -->
+<section id="stack">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span>Розділ 2 · Технічні вимоги</div>
+      <h2>Мови, фреймворки та <span class="gradient-text">інструменти</span></h2>
+      <p class="subtitle">Стек, з яким велась розробка протягом усього періоду практики.</p>
+    </div>
+    <div class="tech-grid reveal">
+      <div class="tech" style="--c:#3776AB"><span class="tech-dot"></span><div><div class="tech-name">Python 3.12</div><span class="tech-cat">Backend language</span></div></div>
+      <div class="tech" style="--c:#009688"><span class="tech-dot"></span><div><div class="tech-name">FastAPI</div><span class="tech-cat">Async web framework</span></div></div>
+      <div class="tech" style="--c:#D71F00"><span class="tech-dot"></span><div><div class="tech-name">SQLAlchemy 2 (async)</div><span class="tech-cat">ORM</span></div></div>
+      <div class="tech" style="--c:#336791"><span class="tech-dot"></span><div><div class="tech-name">PostgreSQL 16</div><span class="tech-cat">Primary database</span></div></div>
+      <div class="tech" style="--c:#85B6E0"><span class="tech-dot"></span><div><div class="tech-name">Alembic</div><span class="tech-cat">DB migrations</span></div></div>
+      <div class="tech" style="--c:#DC382D"><span class="tech-dot"></span><div><div class="tech-name">Redis</div><span class="tech-cat">Cache · queue</span></div></div>
+      <div class="tech" style="--c:#37814A"><span class="tech-dot"></span><div><div class="tech-name">Celery + Beat</div><span class="tech-cat">Background tasks</span></div></div>
+      <div class="tech" style="--c:#0FA0CE"><span class="tech-dot"></span><div><div class="tech-name">Pydantic v2</div><span class="tech-cat">Validation · DTO</span></div></div>
+      <div class="tech" style="--c:#61DAFB"><span class="tech-dot"></span><div><div class="tech-name">React 18</div><span class="tech-cat">Frontend library</span></div></div>
+      <div class="tech" style="--c:#3178C6"><span class="tech-dot"></span><div><div class="tech-name">TypeScript</div><span class="tech-cat">Static typing</span></div></div>
+      <div class="tech" style="--c:#646CFF"><span class="tech-dot"></span><div><div class="tech-name">Vite</div><span class="tech-cat">Build tool</span></div></div>
+      <div class="tech" style="--c:#007FFF"><span class="tech-dot"></span><div><div class="tech-name">Material UI</div><span class="tech-cat">UI components</span></div></div>
+      <div class="tech" style="--c:#FF4154"><span class="tech-dot"></span><div><div class="tech-name">TanStack Query</div><span class="tech-cat">Async state</span></div></div>
+      <div class="tech" style="--c:#412991"><span class="tech-dot"></span><div><div class="tech-name">OpenAI GPT-4o</div><span class="tech-cat">AI personalization</span></div></div>
+      <div class="tech" style="--c:#2496ED"><span class="tech-dot"></span><div><div class="tech-name">Docker Compose</div><span class="tech-cat">Local infra</span></div></div>
+      <div class="tech" style="--c:#0FAE96"><span class="tech-dot"></span><div><div class="tech-name">pytest</div><span class="tech-cat">Testing</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ARCHITECTURE ========== -->
+<section id="architecture">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span>Розділ 2 · Архітектура</div>
+      <h2>Системна <span class="gradient-text">архітектура</span></h2>
+      <p class="subtitle">Багатокомпонентна архітектура з асинхронним API, фоновими worker'ами та зовнішніми інтеграціями.</p>
+    </div>
+    <div class="arch-wrap reveal">
+      <svg class="arch-svg" viewBox="0 0 1080 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="System architecture">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#7C3AED" stop-opacity="0.4"/>
+            <stop offset="1" stop-color="#06B6D4" stop-opacity="0.25"/>
+          </linearGradient>
+          <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#F472B6" stop-opacity="0.30"/>
+            <stop offset="1" stop-color="#7C3AED" stop-opacity="0.25"/>
+          </linearGradient>
+          <linearGradient id="g3" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#06B6D4" stop-opacity="0.30"/>
+            <stop offset="1" stop-color="#10B981" stop-opacity="0.20"/>
+          </linearGradient>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="rgba(255,255,255,0.5)"/>
+          </marker>
+        </defs>
+
+        <!-- CLIENT LAYER -->
+        <g>
+          <rect x="40" y="40" width="220" height="110" rx="14" fill="url(#g1)" stroke="rgba(255,255,255,0.18)"/>
+          <text x="150" y="72" fill="#ECECF1" font-family="Inter" font-size="13" font-weight="700" text-anchor="middle">Frontend</text>
+          <text x="150" y="92" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">React 18 · TypeScript · Vite</text>
+          <text x="150" y="108" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">Material UI · TanStack Query</text>
+          <text x="150" y="130" fill="#67E8F9" font-family="JetBrains Mono" font-size="10" text-anchor="middle">localhost:5173</text>
+        </g>
+
+        <!-- API LAYER -->
+        <g>
+          <rect x="430" y="40" width="220" height="110" rx="14" fill="url(#g2)" stroke="rgba(255,255,255,0.22)"/>
+          <text x="540" y="72" fill="#ECECF1" font-family="Inter" font-size="13" font-weight="700" text-anchor="middle">FastAPI Backend</text>
+          <text x="540" y="92" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">Routers · Services · Repos</text>
+          <text x="540" y="108" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">JWT Auth · Pydantic v2</text>
+          <text x="540" y="130" fill="#C4B5FD" font-family="JetBrains Mono" font-size="10" text-anchor="middle">localhost:8000/api/v1</text>
+        </g>
+
+        <!-- DATABASE -->
+        <g>
+          <rect x="820" y="20" width="220" height="80" rx="14" fill="url(#g3)" stroke="rgba(255,255,255,0.18)"/>
+          <text x="930" y="50" fill="#ECECF1" font-family="Inter" font-size="13" font-weight="700" text-anchor="middle">PostgreSQL 16</text>
+          <text x="930" y="70" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">SQLAlchemy async · Alembic</text>
+          <text x="930" y="88" fill="#67E8F9" font-family="JetBrains Mono" font-size="10" text-anchor="middle">15+ tables</text>
+        </g>
+
+        <!-- REDIS -->
+        <g>
+          <rect x="820" y="120" width="220" height="60" rx="14" fill="url(#g3)" stroke="rgba(255,255,255,0.18)"/>
+          <text x="930" y="148" fill="#ECECF1" font-family="Inter" font-size="13" font-weight="700" text-anchor="middle">Redis</text>
+          <text x="930" y="168" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">Cache · Celery broker</text>
+        </g>
+
+        <!-- WORKER -->
+        <g>
+          <rect x="430" y="220" width="220" height="100" rx="14" fill="url(#g2)" stroke="rgba(255,255,255,0.20)"/>
+          <text x="540" y="250" fill="#ECECF1" font-family="Inter" font-size="13" font-weight="700" text-anchor="middle">Celery Worker</text>
+          <text x="540" y="270" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">Sequence sender · Crawler</text>
+          <text x="540" y="286" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">Funding parser · Job parser</text>
+          <text x="540" y="306" fill="#F9A8D4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Celery Beat · scheduled</text>
+        </g>
+
+        <!-- EXTERNAL -->
+        <g>
+          <rect x="40" y="220" width="220" height="100" rx="14" fill="url(#g1)" stroke="rgba(255,255,255,0.18)"/>
+          <text x="150" y="248" fill="#ECECF1" font-family="Inter" font-size="13" font-weight="700" text-anchor="middle">External APIs</text>
+          <text x="150" y="268" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">LinkedIn · Gmail · Outlook</text>
+          <text x="150" y="284" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">Google/Outlook Calendar</text>
+          <text x="150" y="304" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">OpenAI · Tavily · Exa</text>
+        </g>
+
+        <!-- CRAWLER -->
+        <g>
+          <rect x="820" y="220" width="220" height="100" rx="14" fill="url(#g3)" stroke="rgba(255,255,255,0.18)"/>
+          <text x="930" y="250" fill="#ECECF1" font-family="Inter" font-size="13" font-weight="700" text-anchor="middle">Web Scraper</text>
+          <text x="930" y="270" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">BeautifulSoup · httpx</text>
+          <text x="930" y="286" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">Funding · Vacancies</text>
+          <text x="930" y="306" fill="#9CA3AF" font-family="Inter" font-size="11" text-anchor="middle">Snippet extractor</text>
+        </g>
+
+        <!-- DOCKER -->
+        <g>
+          <rect x="320" y="380" width="440" height="50" rx="12" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.16)" stroke-dasharray="4 4"/>
+          <text x="540" y="410" fill="#9CA3AF" font-family="Inter" font-size="12" text-anchor="middle">Docker Compose · 5 services orchestration</text>
+        </g>
+
+        <!-- ARROWS -->
+        <line x1="260" y1="95" x2="430" y2="95" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="650" y1="80" x2="820" y2="60" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="650" y1="110" x2="820" y2="150" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="540" y1="150" x2="540" y2="220" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="430" y1="270" x2="260" y2="270" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="650" y1="270" x2="820" y2="270" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="930" y1="220" x2="930" y2="180" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="930" y1="220" x2="930" y2="100" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="3 3"/>
+      </svg>
+      <div class="arch-legend">
+        <span><i style="background:linear-gradient(135deg,#7C3AED,#06B6D4)"></i>Клієнт / зовнішні</span>
+        <span><i style="background:linear-gradient(135deg,#F472B6,#7C3AED)"></i>Application Layer</span>
+        <span><i style="background:linear-gradient(135deg,#06B6D4,#10B981)"></i>Data / Infra</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FLOW ========== -->
+<section id="flow">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span>Розділ 2 · Алгоритм</div>
+      <h2>Алгоритм роботи <span class="gradient-text">платформи</span></h2>
+      <p class="subtitle">Користувацький потік від першого пошуку до аналітики результатів кампанії.</p>
+    </div>
+    <div class="flow reveal">
+      <div class="flow-step"><div class="num">1</div><h3>Підключення</h3><p>OAuth: LinkedIn, Email, Calendar</p></div>
+      <div class="flow-step"><div class="num">2</div><h3>Пошук</h3><p>Фільтри: Industry, Location, Segment, Vacancies</p></div>
+      <div class="flow-step"><div class="num">3</div><h3>Збереження</h3><p>Saved Filters → Saved Companies</p></div>
+      <div class="flow-step"><div class="num">4</div><h3>Sequence</h3><p>Multi-step: Email · LinkedIn · Call</p></div>
+      <div class="flow-step"><div class="num">5</div><h3>Доставка</h3><p>Celery worker + rate limit</p></div>
+      <div class="flow-step"><div class="num">6</div><h3>Аналітика</h3><p>Delivered · Reply · Interested · Opt-out</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== MODULES ========== -->
+<section id="modules">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span>Розділ 2 · Реалізований функціонал</div>
+      <h2>Що було <span class="gradient-text">реалізовано</span> за період практики</h2>
+      <p class="subtitle">Повний список модулів, які я особисто розробляв або в розробку яких суттєво долучався.</p>
+    </div>
+    <div class="modules reveal">
+      <div class="module">
+        <div class="module-title">🔐 Auth & RBAC <span class="badge">Backend</span></div>
+        <div class="module-desc">JWT-автентифікація, refresh-токени, ролі та permissions через FastAPI Depends. <strong>Реалізовано:</strong> /auth/register, /login, /refresh, /me + декоратори RBAC.</div>
+      </div>
+      <div class="module">
+        <div class="module-title">🏢 Companies & Contacts <span class="badge">Full-stack</span></div>
+        <div class="module-desc">Search з 6+ фільтрами (Industry, Market Segment, Location, Job Postings, Company Search), drill-down: компанія → контакти → інші співробітники. SQLAlchemy моделі, repository-pattern, REST API, React-сторінки на MUI.</div>
+      </div>
+      <div class="module">
+        <div class="module-title">🔄 Sequences <span class="badge">Full-stack</span></div>
+        <div class="module-desc">CRUD послідовностей, state-machine (start / pause / finish / clone), мульти-крокові кампанії з A/B-тестуванням, drill-down по контактам та компаніям, статистика по кожному кроку.</div>
+      </div>
+      <div class="module">
+        <div class="module-title">🔌 Integrations <span class="badge">Backend</span></div>
+        <div class="module-desc"><strong>OAuth-флоу</strong> для Gmail / Outlook / Google Calendar / Outlook Calendar; LinkedIn cookie-auth; обмін кодом на токен, безпечне збереження, refresh-логіка, rate limiting та retry з експоненційним бекофом.</div>
+      </div>
+      <div class="module">
+        <div class="module-title">🤖 AI Search & Personalization <span class="badge ai">AI</span></div>
+        <div class="module-desc">Multi-angle AI-пошук на GPT-4o з планувальником ракурсів (angle planner), стрімінговою обробкою, snippet-extractor для витягування ключових фактів, cost-tracker для обліку токенів. Інтеграції: OpenAI Web Search, Tavily, Exa.</div>
+      </div>
+      <div class="module">
+        <div class="module-title">📊 Analytics <span class="badge">Full-stack</span></div>
+        <div class="module-desc">Dashboard з overview-метриками, sequence funnel (Scheduled → Delivered → Bounced → Reply → Interested → Opt-out), drill-down по контакту/компанії. Оптимізовано через selectinload/joinedload + Redis-кеш.</div>
+      </div>
+      <div class="module">
+        <div class="module-title">⚙️ Background Tasks <span class="badge bg">Async</span></div>
+        <div class="module-desc">Celery + Redis: відправка Sequence-кроків за розкладом (Celery Beat), фоновий збір даних, парсинг funding-новин та вакансій, web-скрейпінг через BeautifulSoup.</div>
+      </div>
+      <div class="module">
+        <div class="module-title">📅 Calendar & Bookings <span class="badge">Full-stack</span></div>
+        <div class="module-desc">Підключення Google/Outlook Calendar, відображення доступних слотів, автоматичне резервування часу при бронюванні зустрічі клієнтом, синхронізація з Sequence.</div>
+      </div>
+      <div class="module">
+        <div class="module-title">🧪 Tests & Quality <span class="badge">Quality</span></div>
+        <div class="module-desc">pytest unit + integration тести на сервіси, репозиторії та API, валідатори на Pydantic + бізнес-правила в сервісному шарі, code review від команди.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== TIMELINE ========== -->
+<section id="timeline">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span>Розділ 2 · Хід виконання</div>
+      <h2>Календарний <span class="gradient-text">графік</span></h2>
+      <p class="subtitle">Поетапний план робіт із настановчою конференцією, реалізацією, тестуванням та захистом.</p>
+    </div>
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-date">12.03.2026</div>
+        <div class="tl-title">Настановча конференція</div>
+        <div class="tl-text">Інструктаж від керівника від факультету щодо термінів, графіку та вимог до документації.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">16.03.2026</div>
+        <div class="tl-title">Прибуття на підприємство</div>
+        <div class="tl-text">Інструктаж з техніки безпеки, охорони праці та пожежної безпеки. Знайомство з командою, доступ до репозиторію.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">17.03.2026 – 20.03.2026</div>
+        <div class="tl-title">Онбординг у проєкт</div>
+        <div class="tl-text">Розгортання локального середовища (Docker Compose: API + frontend + Postgres + Redis + worker), вивчення архітектури та конвенцій.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">23.03.2026 – 27.03.2026</div>
+        <div class="tl-title">Серверна частина · моделі та API</div>
+        <div class="tl-text">SQLAlchemy-моделі, enum-типи, association-таблиці, Alembic-міграції, Pydantic-схеми, REST-ендпоінти на FastAPI.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">30.03.2026 – 03.04.2026</div>
+        <div class="tl-title">Клієнтська частина</div>
+        <div class="tl-text">React-компоненти на TypeScript, MUI-таблиці та форми, інтеграція з API через TanStack Query, оптимістичні оновлення, валідація.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">06.04.2026 – 10.04.2026</div>
+        <div class="tl-title">Інтеграції з зовнішніми сервісами</div>
+        <div class="tl-text">OAuth-автентифікація, робота з API сторонніх платформ, реалізація механізмів збору та обробки даних.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">13.04.2026 – 17.04.2026</div>
+        <div class="tl-title">Фонові задачі та тестування</div>
+        <div class="tl-text">Celery + Redis Beat, web-скрейпінг на BeautifulSoup, pytest unit та integration, code review, виправлення дефектів.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">20.04.2026 – 24.04.2026</div>
+        <div class="tl-title">Оптимізація · документація · захист</div>
+        <div class="tl-text">Прибрано N+1 (selectinload/joinedload), додано індекси та Redis-кеш. Підготовка презентації, виступ перед командою та керівником.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== TESTING ========== -->
+<section id="testing">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span>Розділ 2 · Апробація</div>
+      <h2>Тестування та <span class="gradient-text">апробація</span></h2>
+      <p class="subtitle">Як перевірялась якість коду та коректність реалізованого функціоналу.</p>
+    </div>
+    <div class="test-grid reveal">
+      <div class="test-card">
+        <div class="num">pytest</div>
+        <div class="label">Автоматизоване тестування</div>
+        <div class="desc">Unit-тести сервісного шару, integration-тести API-ендпоінтів, фікстури з тестовою БД, покриття edge-кейсів.</div>
+      </div>
+      <div class="test-card">
+        <div class="num">Swagger UI</div>
+        <div class="label">Ручне тестування API</div>
+        <div class="desc">OpenAPI-документація з summary, response_model та прикладами для кожного нового ендпоінта; ручний прогон сценаріїв.</div>
+      </div>
+      <div class="test-card">
+        <div class="num">Code Review</div>
+        <div class="label">Команда</div>
+        <div class="desc">Pull request → review від техлідa та колег → внесення правок за коментарями → merge у головну гілку.</div>
+      </div>
+      <div class="test-card">
+        <div class="num">Staging</div>
+        <div class="label">Ручне приймальне</div>
+        <div class="desc">Прогін сценаріїв на staging-середовищі, демо-дані для відтворення, баг-фіксинг перед демонстрацією.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== STATS · TABLE · ANIMATION ========== -->
+<section id="stats">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span>Розділ 3 · Підсумки</div>
+      <h2>Статистика <span class="gradient-text">практики</span></h2>
+      <p class="subtitle">Зведені кількісні показники виконаної роботи за період 16.03 – 24.04.2026.</p>
+    </div>
+
+    <div class="grid grid-4 reveal">
+      <div class="card">
+        <div class="card-icon">📅</div>
+        <div class="label">Тривалість</div>
+        <div class="value"><span class="count" data-to="6">0</span> тижнів</div>
+        <p style="margin-top:8px">Повний робочий день</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧩</div>
+        <div class="label">Реалізовано модулів</div>
+        <div class="value"><span class="count" data-to="9">0</span></div>
+        <p style="margin-top:8px">Backend · Frontend · AI · Async</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔀</div>
+        <div class="label">Pull requests</div>
+        <div class="value"><span class="count" data-to="24">0</span></div>
+        <p style="margin-top:8px">Code review від техліда</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧪</div>
+        <div class="label">Pytest-тестів</div>
+        <div class="value"><span class="count" data-to="120">0</span>+</div>
+        <p style="margin-top:8px">Unit + integration</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:32px; overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr><th>Категорія</th><th>Технологія / показник</th><th>Деталі</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Backend</td><td>FastAPI · Python 3.12</td><td>Routers, Services, Repos, JWT, Pydantic v2</td></tr>
+          <tr><td>База даних</td><td>PostgreSQL 16</td><td>SQLAlchemy async, Alembic, 15+ таблиць</td></tr>
+          <tr><td>Frontend</td><td>React 18 · TS · Vite</td><td>Material UI, TanStack Query, форми та таблиці</td></tr>
+          <tr><td>Фонові задачі</td><td>Celery + Beat · Redis</td><td>Sequence sender, парсери, web-scraper</td></tr>
+          <tr><td>Інтеграції</td><td>5 зовнішніх API</td><td>Gmail · Outlook · Google/Outlook Calendar · LinkedIn · OpenAI</td></tr>
+          <tr><td>AI</td><td>OpenAI GPT-4o</td><td>Multi-angle search, snippet-extractor, cost-tracker</td></tr>
+          <tr><td>Тестування</td><td>pytest · Swagger · code review</td><td>Unit + integration, ручне приймальне на staging</td></tr>
+          <tr><td>Інфраструктура</td><td>Docker Compose</td><td>5 сервісів: API, frontend, Postgres, Redis, worker</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SCREENSHOTS / PHOTO ARCHIVE ========== -->
+<section id="screenshots">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span>Розділ 2-3 · Скріншоти та фотоархів</div>
+      <h2>Інтерфейс <span class="gradient-text">платформи</span></h2>
+      <p class="subtitle">Скріншоти ключових екранів реалізованого функціоналу — пошук компаній і контактів, картки, multi-step розсилки, інтеграції та календар бронювань.</p>
+    </div>
+    <div class="shots reveal">
+      <figure class="wide">
+        <img src="screenshots/searching.png" alt="Інтерфейс пошуку компаній з фільтрами" loading="lazy" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block">
+        <figcaption>Search · Companies <span>Інтерфейс пошуку компаній з фільтрами</span></figcaption>
+      </figure>
+      <figure class="wide">
+        <img src="screenshots/resultSearching.png" alt="Результати пошуку з drill-down" loading="lazy" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block">
+        <figcaption>Search Results <span>Результати пошуку, drill-down до деталей</span></figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/kartkaCompaniy.png" alt="Картка компанії" loading="lazy" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block">
+        <figcaption>Company Card <span>Огляд та контакти компанії</span></figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/company.png" alt="Деталі компанії" loading="lazy" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block">
+        <figcaption>Company Details <span>Детальний профіль компанії</span></figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/people.png" alt="Список контактів" loading="lazy" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block">
+        <figcaption>People List <span>Список контактів з фільтрами</span></figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/kartkaPeople.png" alt="Картка контакту" loading="lazy" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block">
+        <figcaption>Person Card <span>Особиста картка контакту</span></figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/rozsilka.png" alt="Multi-step розсилка" loading="lazy" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block">
+        <figcaption>Sequences <span>Multi-step розсилка з A/B-кроками</span></figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/integrations.png" alt="Інтеграції OAuth" loading="lazy" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block">
+        <figcaption>Integrations <span>OAuth: Gmail · LinkedIn · Calendar</span></figcaption>
+      </figure>
+      <figure class="wide">
+        <img src="screenshots/calendar.png" alt="Календар бронювань" loading="lazy" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block">
+        <figcaption>Calendar <span>Бронювання зустрічей через публічний слот</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brand" style="margin-bottom:14px">
+          <span class="brand-logo"></span>
+          <span>ColdOutreach · Захист практики 2026</span>
+        </div>
+        <p style="margin:0">Карпатський національний університет імені Василя Стефаника. Факультет математики та інформатики. Кафедра комп'ютерних наук та інформаційних систем.</p>
+        <div class="signatures">
+          <div class="sig">
+            <div style="color:var(--dim); font-size:11px; text-transform:uppercase; letter-spacing:0.6px">Керівник від бази практики</div>
+            <div class="sig-line"></div>
+            <div class="sig-name">Христофорова А. Р.</div>
+            <div class="sig-role">Директор ТОВ «БІЗНЕС-КОНСТРУКТОР УКРАЇНА»</div>
+          </div>
+          <div class="sig">
+            <div style="color:var(--dim); font-size:11px; text-transform:uppercase; letter-spacing:0.6px">Керівник від кафедри</div>
+            <div class="sig-line"></div>
+            <div class="sig-name">Семаньків М. В.</div>
+            <div class="sig-role">Доцент кафедри комп'ютерних наук та ІС</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="color:var(--text); font-weight:600; margin-bottom:10px">Розділи</div>
+        <div style="display:flex; flex-direction:column; gap:6px">
+          <a href="#about">Про практику</a>
+          <a href="#product">Продукт</a>
+          <a href="#stack">Стек</a>
+          <a href="#architecture">Архітектура</a>
+          <a href="#timeline">Графік</a>
+          <a href="#stats">Статистика</a>
+          <a href="#screenshots">Скріншоти</a>
+        </div>
+      </div>
+      <div>
+        <div style="color:var(--text); font-weight:600; margin-bottom:10px">Деталі</div>
+        <div style="display:flex; flex-direction:column; gap:6px">
+          <span>Термін: 16.03 – 24.04.2026</span>
+          <span>Оцінка: 92 / Відмінно</span>
+          <span>Група: ІСТ-41</span>
+          <span>Спеціальність: 126 ІСТ</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px">
+      <span>© 2026 Гоян Олександр Васильович · Усі права захищено</span>
+      <span style="color:var(--dim)">Made with ♥ for КНУ ім. В. Стефаника</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // Count-up animation for .count elements
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const countEls = document.querySelectorAll('.count');
+  const countIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const to = +el.dataset.to;
+      if (reduce) { el.textContent = to; countIO.unobserve(el); return; }
+      const dur = 1100;
+      const start = performance.now();
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / dur);
+        const v = Math.round(to * (1 - Math.pow(1 - t, 3)));
+        el.textContent = v;
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      countIO.unobserve(el);
+    });
+  }, { threshold: 0.4 });
+  countEls.forEach((el) => countIO.observe(el));
+
+  // Active nav link by section
+  const links = document.querySelectorAll('.nav-links a');
+  const sections = Array.from(document.querySelectorAll('section[id]'));
+  const navIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        const id = e.target.getAttribute('id');
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { threshold: 0.35 });
+  sections.forEach((s) => navIO.observe(s));
+</script>
+
+</body>
+</html>

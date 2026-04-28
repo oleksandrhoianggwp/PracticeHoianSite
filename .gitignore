@@ -1,0 +1,10 @@
+# Приватні джерельні документи (не для публікації)
+*.docx
+*.pdf
+prompt.md
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
